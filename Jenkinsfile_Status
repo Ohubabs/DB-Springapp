@@ -1,0 +1,38 @@
+pipeline{
+    agent { 
+        label 'kubernetes'
+  }
+    stages{
+        //stage('Clone Code'){
+            //steps{
+                //sh "echo cloning code"
+                //sh "echo clone code complete"
+                //git 'https://github.com/Konoha-23/Konoha_WP.git'
+            //}
+        //}
+        stage('Get Pods in Konoha Namespace'){
+            steps{
+              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                sh "echo 'Get Pods in Konoha namespace'"
+                sh "kubectl get po -o wide -n konoha"
+                }
+            }
+        }
+        stage('Describe Pods in Konoha Namespace'){
+            steps{
+              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                sh "echo 'Describe Pods in Konoha Namespace'"
+                sh "kubectl describe po -n konoha"
+                }
+            }
+        }
+        //stage('Check Logs'){
+        //    steps{
+        //      withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+        //        sh "echo 'Check Logs'"
+        //        sh "kubectl logs wordpress-849fc57f7f-xnf9q -n robot-shop"
+        //        }
+        //    }
+        //}
+    }
+} 

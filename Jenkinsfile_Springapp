@@ -1,0 +1,25 @@
+pipeline{
+    agent { 
+        label 'kubernetes'
+  }
+    stages{
+        //stage('Clone Code'){
+            //steps{
+                //sh "echo cloning code"
+                //sh "echo clone code complete"
+                //git 'https://github.com/Konoha-23/springapp-mongo.git
+            //}
+        //}
+        stage('Deploy konoha.devopsnetwork.net'){
+            steps{
+              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+              sh "echo 'Create konoha.devopsnetwork.net'"
+              sh "terraform init"
+              sh "terraform validate"
+              sh "terraform plan"
+              sh "terraform apply --auto-approve"
+              }
+            }
+        }
+    }
+}
